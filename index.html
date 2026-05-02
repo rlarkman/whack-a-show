@@ -223,9 +223,18 @@
     'images/team/td.png'
   ];
 
+  let imageQueue = [];
+
   function randomTeamImage() {
-    const idx = Math.floor(Math.random() * teamImages.length);
-    return teamImages[idx] || 'https://api.iconify.design/noto:person.svg';
+    if (imageQueue.length === 0) {
+      // Fisher-Yates shuffle into the queue
+      imageQueue = [...teamImages];
+      for (let i = imageQueue.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [imageQueue[i], imageQueue[j]] = [imageQueue[j], imageQueue[i]];
+      }
+    }
+    return imageQueue.pop();
   }
 
   // Utility: Get a random amount of time for the mole to stay up
@@ -275,6 +284,9 @@
     startBtn.disabled = true;
     startBtn.textContent = "Playing...";
     
+    // Reset image queue for fair distribution from the start
+    imageQueue = [];
+
     // Start the game logic
     peep();
     
